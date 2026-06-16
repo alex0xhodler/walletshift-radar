@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "buildCommand": "python3 -m walletshift_radar.main --seed-from-walletshift --no-chain-scan",
+  "outputDirectory": ".",
+  "routes": [
+    { "src": "/", "dest": "/dashboard.html" }
+  ]
+}

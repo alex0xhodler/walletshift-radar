@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
+  "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.walletshift.radar</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>/Users/0xhodler/Documents/git/8004/walletshift-radar/run.sh</string>
+  </array>
+
+  <!-- Run daily at 09:00 local time -->
+  <key>StartCalendarInterval</key>
+  <dict>
+    <key>Hour</key>   <integer>9</integer>
+    <key>Minute</key> <integer>0</integer>
+  </dict>
+
+  <key>WorkingDirectory</key>
+  <string>/Users/0xhodler/Documents/git/8004/walletshift-radar</string>
+
+  <key>StandardOutPath</key>
+  <string>/Users/0xhodler/Documents/git/8004/walletshift-radar/radar.log</string>
+
+  <key>StandardErrorPath</key>
+  <string>/Users/0xhodler/Documents/git/8004/walletshift-radar/radar.err.log</string>
+
+  <!-- Retry if the job didn't run (e.g. machine was asleep) -->
+  <key>RunAtLoad</key>
+  <false/>
+</dict>
+</plist>

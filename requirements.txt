@@ -1,0 +1,2 @@
+# walletshift-radar — stdlib only (sqlite3, urllib, json, html, re)
+# No external packages required.
