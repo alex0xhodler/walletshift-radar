@@ -1,0 +1,433 @@
+{
+ "query": {
+  "q": null,
+  "category": null,
+  "proto": null,
+  "x402": false,
+  "status": null
+ },
+ "total": 711,
+ "count": 5,
+ "limit": 5,
+ "offset": 0,
+ "results": [
+  {
+   "id": 22838,
+   "name": "AgentEinstein",
+   "category": "defi-trade-execution",
+   "label": "Trading & On-Chain Execution",
+   "summary": "Autonomous crypto agent that analyzes markets and executes trades across multiple chains.",
+   "ens": null,
+   "x402": true,
+   "protos": [
+    "a2a",
+    "mcp",
+    "web"
+   ],
+   "skills_count": 24,
+   "endpoints": [
+    {
+     "proto": "a2a",
+     "name": "A2A",
+     "url": "https://emc2ai.io/api/a2a",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "mcp",
+     "name": "MCP",
+     "url": "https://emc2ai.io/api/mcp",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": null,
+     "name": "REST",
+     "url": "https://emc2ai.io/api",
+     "health": {
+      "status": "dead",
+      "http": null,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "web",
+     "name": "web",
+     "url": "https://emc2ai.io",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    }
+   ],
+   "detail": "https://thewalletshift.com/api/services/22838"
+  },
+  {
+   "id": 28268,
+   "name": "EmblemAI",
+   "category": "defi-trade-execution",
+   "label": "Trading & On-Chain Execution",
+   "summary": "Crypto assistant executing token swaps, cross-chain trades, perps, and payments across many chains via plain English.",
+   "ens": "EmblemAI.eth",
+   "x402": true,
+   "protos": [
+    "web",
+    "a2a",
+    "mcp",
+    "x402",
+    "ens"
+   ],
+   "skills_count": 24,
+   "endpoints": [
+    {
+     "proto": "web",
+     "name": "web",
+     "url": "https://agenthustle.ai",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "a2a",
+     "name": "A2A",
+     "url": "https://agenthustle.ai/.well-known/agent-card.json",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "mcp",
+     "name": "MCP",
+     "url": "https://agenthustle.ai/.well-known/mcp.json",
+     "health": {
+      "status": "dead",
+      "http": 405,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": null,
+     "name": "payg",
+     "url": "https://agenthustle.ai/api/payg",
+     "health": {
+      "status": "dead",
+      "http": 401,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "x402",
+     "name": "x402",
+     "url": "https://agenthustle.ai/.well-known/x402",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": null,
+     "name": "OASF",
+     "url": "https://github.com/agntcy/oasf/",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": null,
+     "name": "toolDiscovery",
+     "url": "https://agenthustle.ai/api/tools/discover",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": null,
+     "name": "toolPricing",
+     "url": "https://agenthustle.ai/api/tools/pricing/{paymentToken}",
+     "health": {
+      "status": "dead",
+      "http": 400,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": null,
+     "name": "toolExecute",
+     "url": "https://agenthustle.ai/api/tools/execute/{paymentToken}/{toolName}",
+     "health": {
+      "status": "dead",
+      "http": 400,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": null,
+     "name": "email",
+     "url": "mailto:hello@emblemvault.ai"
+    },
+    {
+     "proto": "ens",
+     "name": "ENS",
+     "url": "EmblemAI.eth"
+    },
+    {
+     "proto": null,
+     "name": "agentWallet",
+     "url": "eip155:8453:0x0BbEFF1EE4114976F84D1e1C44150515719fD176"
+    }
+   ],
+   "detail": "https://thewalletshift.com/api/services/28268"
+  },
+  {
+   "id": 25056,
+   "name": "Mindbrick",
+   "category": "task-execution-services",
+   "label": "Real-World Task & Booking Services",
+   "summary": "Task automation agent that fetches APIs/pages/PDFs, crawls sites, and extracts structured data via paid x402 tools.",
+   "ens": null,
+   "x402": true,
+   "protos": [
+    "mcp",
+    "a2a",
+    "web"
+   ],
+   "skills_count": 24,
+   "endpoints": [
+    {
+     "proto": "mcp",
+     "name": "MCP",
+     "url": "https://mcp.xprtlai.com/mcp",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "a2a",
+     "name": "A2A",
+     "url": "https://mcp.xprtlai.com/a2a",
+     "health": {
+      "status": "dead",
+      "http": 405,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "mcp",
+     "name": "web",
+     "url": "https://mcp.xprtlai.com/api",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "web",
+     "name": "web",
+     "url": "https://xprtlai.com/",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    }
+   ],
+   "detail": "https://thewalletshift.com/api/services/25056"
+  },
+  {
+   "id": 22883,
+   "name": "NOEMA",
+   "category": "content-creative-generation",
+   "label": "Content & Creative Generation",
+   "summary": "AI generation platform with 32 tools (DALL-E, FLUX, Stable Diffusion, video) for agents via x402.",
+   "ens": null,
+   "x402": true,
+   "protos": [
+    "web",
+    "mcp",
+    "x402"
+   ],
+   "skills_count": 24,
+   "endpoints": [
+    {
+     "proto": "web",
+     "name": "web",
+     "url": "https://noema.art",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "mcp",
+     "name": "MCP",
+     "url": "https://noema.art/api/v1/mcp",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "x402",
+     "name": "x402",
+     "url": "https://noema.art/api/v1/x402/generate",
+     "health": {
+      "status": "dead",
+      "http": 405,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    }
+   ],
+   "detail": "https://thewalletshift.com/api/services/22883"
+  },
+  {
+   "id": 29082,
+   "name": "Syenite",
+   "category": "defi-trade-execution",
+   "label": "Trading & On-Chain Execution",
+   "summary": "Syenite: MCP DeFi intelligence and execution\u2014lending/yield/risk data plus swap, bridge, and lending execution across 30+ chains.",
+   "ens": null,
+   "x402": true,
+   "protos": [
+    "mcp",
+    "web"
+   ],
+   "skills_count": 24,
+   "endpoints": [
+    {
+     "proto": "mcp",
+     "name": "MCP",
+     "url": "https://syenite.ai/mcp",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "web",
+     "name": "web",
+     "url": "https://syenite.ai",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    }
+   ],
+   "detail": "https://thewalletshift.com/api/services/29082"
+  }
+ ],
+ "categories": [
+  {
+   "key": "defi-yield-rebalancing",
+   "label": "DeFi Yield Optimization & Portfolio Rebalancing",
+   "count": 455
+  },
+  {
+   "key": "conversational-assistant-general",
+   "label": "General Conversational & Personal AI Assistant",
+   "count": 48
+  },
+  {
+   "key": "market-data-analytics",
+   "label": "Crypto Market Data, Analytics & Research",
+   "count": 35
+  },
+  {
+   "key": "realworld-data-feeds",
+   "label": "Real-World Data Feeds (sports, space, geo, news, events)",
+   "count": 32
+  },
+  {
+   "key": "builder-infra-tooling",
+   "label": "Developer / Infrastructure & Automation Tooling",
+   "count": 28
+  },
+  {
+   "key": "defi-trade-execution",
+   "label": "Trading & On-Chain Execution",
+   "count": 27
+  },
+  {
+   "key": "content-creative-generation",
+   "label": "Content & Creative Generation",
+   "count": 18
+  },
+  {
+   "key": "task-execution-services",
+   "label": "Real-World Task & Booking Services",
+   "count": 15
+  },
+  {
+   "key": "knowledge-reference-apis",
+   "label": "Knowledge & Reference Lookup APIs",
+   "count": 14
+  },
+  {
+   "key": "dev-infra-intelligence",
+   "label": "Developer & Tech Intelligence Feeds",
+   "count": 12
+  },
+  {
+   "key": "identity-naming",
+   "label": "On-Chain Identity & Naming Infrastructure",
+   "count": 11
+  },
+  {
+   "key": "security-risk-scoring",
+   "label": "Security, Risk & Trust Scoring",
+   "count": 10
+  },
+  {
+   "key": "agent-economy-infrastructure",
+   "label": "Agent Economy & Token-Launch Infrastructure",
+   "count": 6
+  }
+ ],
+ "network": "ethereum-mainnet",
+ "generated_at": "2026-06-13",
+ "docs": "https://thewalletshift.com/SKILL.md"
+}

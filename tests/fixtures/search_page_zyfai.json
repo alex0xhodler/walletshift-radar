@@ -1,0 +1,280 @@
+{
+ "query": {
+  "q": null,
+  "category": null,
+  "proto": null,
+  "x402": false,
+  "status": null
+ },
+ "total": 711,
+ "count": 5,
+ "limit": 5,
+ "offset": 700,
+ "results": [
+  {
+   "id": 31765,
+   "name": "Zyfai Rebalancer Agent for 0xFc1C76fA0a5",
+   "category": "defi-yield-rebalancing",
+   "label": "DeFi Yield Optimization & Portfolio Rebalancing",
+   "summary": "ZK-powered agent that finds and rebalances into low-risk yield opportunities across bluechip protocols on multiple chains.",
+   "ens": null,
+   "x402": false,
+   "protos": [
+    "web",
+    "mcp"
+   ],
+   "skills_count": 0,
+   "endpoints": [
+    {
+     "proto": "web",
+     "name": "web",
+     "url": "https://www.zyf.ai",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "mcp",
+     "name": "MCP",
+     "url": "https://mcp.zyf.ai",
+     "health": {
+      "status": "dead",
+      "http": 404,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    }
+   ],
+   "detail": "https://thewalletshift.com/api/services/31765"
+  },
+  {
+   "id": 28501,
+   "name": "Zyfai Rebalancer Agent for 0xfcE4E0B238c",
+   "category": "defi-yield-rebalancing",
+   "label": "DeFi Yield Optimization & Portfolio Rebalancing",
+   "summary": "ZK-powered rebalancer that finds low-risk yield across bluechip protocols on Base/Arbitrum/Plasma and rebalances capital.",
+   "ens": null,
+   "x402": false,
+   "protos": [
+    "web",
+    "mcp"
+   ],
+   "skills_count": 0,
+   "endpoints": [
+    {
+     "proto": "web",
+     "name": "web",
+     "url": "https://www.zyf.ai",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "mcp",
+     "name": "MCP",
+     "url": "https://mcp.zyf.ai",
+     "health": {
+      "status": "dead",
+      "http": 404,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    }
+   ],
+   "detail": "https://thewalletshift.com/api/services/28501"
+  },
+  {
+   "id": 32939,
+   "name": "Zyfai Rebalancer Agent for 0xfDA12E31b7B",
+   "category": "defi-yield-rebalancing",
+   "label": "DeFi Yield Optimization & Portfolio Rebalancing",
+   "summary": "Zyfai ZK-powered rebalancer that finds low-risk yield and rebalances capital across bluechip protocols on multiple chains.",
+   "ens": null,
+   "x402": false,
+   "protos": [
+    "web",
+    "mcp"
+   ],
+   "skills_count": 0,
+   "endpoints": [
+    {
+     "proto": "web",
+     "name": "web",
+     "url": "https://www.zyf.ai",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "mcp",
+     "name": "MCP",
+     "url": "https://mcp.zyf.ai",
+     "health": {
+      "status": "dead",
+      "http": 404,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    }
+   ],
+   "detail": "https://thewalletshift.com/api/services/32939"
+  },
+  {
+   "id": 32115,
+   "name": "Zyfai Rebalancer Agent for 0xFeFe308032F",
+   "category": "defi-yield-rebalancing",
+   "label": "DeFi Yield Optimization & Portfolio Rebalancing",
+   "summary": "ZK-powered rebalancer that finds and allocates capital into low-risk bluechip yield opportunities across multiple chains.",
+   "ens": null,
+   "x402": false,
+   "protos": [
+    "web",
+    "mcp"
+   ],
+   "skills_count": 0,
+   "endpoints": [
+    {
+     "proto": "web",
+     "name": "web",
+     "url": "https://www.zyf.ai",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "mcp",
+     "name": "MCP",
+     "url": "https://mcp.zyf.ai",
+     "health": {
+      "status": "dead",
+      "http": 404,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    }
+   ],
+   "detail": "https://thewalletshift.com/api/services/32115"
+  },
+  {
+   "id": 32075,
+   "name": "Zyfai Rebalancer Agent for 0xFF4d4871F75",
+   "category": "defi-yield-rebalancing",
+   "label": "DeFi Yield Optimization & Portfolio Rebalancing",
+   "summary": "ZK-powered rebalancer that finds and allocates capital into low-risk bluechip yield opportunities across multiple chains.",
+   "ens": null,
+   "x402": false,
+   "protos": [
+    "web",
+    "mcp"
+   ],
+   "skills_count": 0,
+   "endpoints": [
+    {
+     "proto": "web",
+     "name": "web",
+     "url": "https://www.zyf.ai",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "mcp",
+     "name": "MCP",
+     "url": "https://mcp.zyf.ai",
+     "health": {
+      "status": "dead",
+      "http": 404,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    }
+   ],
+   "detail": "https://thewalletshift.com/api/services/32075"
+  }
+ ],
+ "categories": [
+  {
+   "key": "defi-yield-rebalancing",
+   "label": "DeFi Yield Optimization & Portfolio Rebalancing",
+   "count": 455
+  },
+  {
+   "key": "conversational-assistant-general",
+   "label": "General Conversational & Personal AI Assistant",
+   "count": 48
+  },
+  {
+   "key": "market-data-analytics",
+   "label": "Crypto Market Data, Analytics & Research",
+   "count": 35
+  },
+  {
+   "key": "realworld-data-feeds",
+   "label": "Real-World Data Feeds (sports, space, geo, news, events)",
+   "count": 32
+  },
+  {
+   "key": "builder-infra-tooling",
+   "label": "Developer / Infrastructure & Automation Tooling",
+   "count": 28
+  },
+  {
+   "key": "defi-trade-execution",
+   "label": "Trading & On-Chain Execution",
+   "count": 27
+  },
+  {
+   "key": "content-creative-generation",
+   "label": "Content & Creative Generation",
+   "count": 18
+  },
+  {
+   "key": "task-execution-services",
+   "label": "Real-World Task & Booking Services",
+   "count": 15
+  },
+  {
+   "key": "knowledge-reference-apis",
+   "label": "Knowledge & Reference Lookup APIs",
+   "count": 14
+  },
+  {
+   "key": "dev-infra-intelligence",
+   "label": "Developer & Tech Intelligence Feeds",
+   "count": 12
+  },
+  {
+   "key": "identity-naming",
+   "label": "On-Chain Identity & Naming Infrastructure",
+   "count": 11
+  },
+  {
+   "key": "security-risk-scoring",
+   "label": "Security, Risk & Trust Scoring",
+   "count": 10
+  },
+  {
+   "key": "agent-economy-infrastructure",
+   "label": "Agent Economy & Token-Launch Infrastructure",
+   "count": 6
+  }
+ ],
+ "network": "ethereum-mainnet",
+ "generated_at": "2026-06-13",
+ "docs": "https://thewalletshift.com/SKILL.md"
+}

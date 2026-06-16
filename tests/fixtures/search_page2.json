@@ -1,0 +1,359 @@
+{
+ "query": {
+  "q": null,
+  "category": null,
+  "proto": null,
+  "x402": false,
+  "status": null
+ },
+ "total": 711,
+ "count": 5,
+ "limit": 5,
+ "offset": 5,
+ "results": [
+  {
+   "id": 22763,
+   "name": "Maestro Bitcoin",
+   "category": "market-data-analytics",
+   "label": "Crypto Market Data, Analytics & Research",
+   "summary": "Bitcoin blockchain data agent via Maestro: address balances, UTXOs, BRC20/Runes/Ordinals, mempool.",
+   "ens": null,
+   "x402": false,
+   "protos": [
+    "mcp"
+   ],
+   "skills_count": 24,
+   "endpoints": [
+    {
+     "proto": "mcp",
+     "name": "MCP",
+     "url": "https://xbt-mainnet.gomaestro-api.org/v0/mcp",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": null,
+     "name": "OASF",
+     "url": "https://github.com/agntcy/oasf/",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    }
+   ],
+   "detail": "https://thewalletshift.com/api/services/22763"
+  },
+  {
+   "id": 29402,
+   "name": "Name Whisper",
+   "category": "identity-naming",
+   "label": "On-Chain Identity & Naming Infrastructure",
+   "summary": "ENS intelligence layer for agents: 34 MCP tools to search 3.6M+ names, register/renew, manage records, mint subnames, and trade.",
+   "ens": null,
+   "x402": false,
+   "protos": [
+    "mcp"
+   ],
+   "skills_count": 24,
+   "endpoints": [
+    {
+     "proto": "mcp",
+     "name": "MCP",
+     "url": "https://namewhisper.ai/mcp",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": null,
+     "name": "OASF",
+     "url": "https://github.com/agntcy/oasf/",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    }
+   ],
+   "detail": "https://thewalletshift.com/api/services/29402"
+  },
+  {
+   "id": 13025,
+   "name": "XPRTL MCP",
+   "category": "builder-infra-tooling",
+   "label": "Developer / Infrastructure & Automation Tooling",
+   "summary": "30+ MCP toolkit: web scraping, extraction, swaps, verification and payments for agents.",
+   "ens": null,
+   "x402": true,
+   "protos": [
+    "mcp",
+    "a2a",
+    "web"
+   ],
+   "skills_count": 20,
+   "endpoints": [
+    {
+     "proto": null,
+     "name": "agentWallet",
+     "url": "eip155:8453:0xD3bC3AFC621Df921D073fbF6f13ac66B1A3C0A1C"
+    },
+    {
+     "proto": "mcp",
+     "name": "MCP",
+     "url": "https://mcp.xprtlai.com/",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "a2a",
+     "name": "A2A",
+     "url": "https://xprtlai.com/.well-known/agent.json",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "challenge"
+     }
+    },
+    {
+     "proto": "mcp",
+     "name": "web",
+     "url": "https://fflpdljiuruqdnewvwkk.supabase.co/functions/v1/mcp",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": null,
+     "name": "email",
+     "url": "mailto:xportalxai@gmail.com"
+    },
+    {
+     "proto": "web",
+     "name": "web",
+     "url": "https://xprtlai.com",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    }
+   ],
+   "detail": "https://thewalletshift.com/api/services/13025"
+  },
+  {
+   "id": 26345,
+   "name": "MangoSwap Router",
+   "category": "defi-trade-execution",
+   "label": "Trading & On-Chain Execution",
+   "summary": "DEX routing agent executing best-price swaps via Uniswap V3/Aerodrome plus batch payments, escrow, and payroll.",
+   "ens": null,
+   "x402": false,
+   "protos": [
+    "mcp",
+    "a2a",
+    "web",
+    "x402"
+   ],
+   "skills_count": 14,
+   "endpoints": [
+    {
+     "proto": "mcp",
+     "name": "MCP",
+     "url": "https://gateway.spraay.app/mcp",
+     "health": {
+      "status": "dead",
+      "http": 404,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "a2a",
+     "name": "A2A",
+     "url": "https://gateway.spraay.app/.well-known/agent-card.json",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "web",
+     "name": "web",
+     "url": "https://mangoswap.xyz",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "x402",
+     "name": "x402",
+     "url": "https://gateway.spraay.app",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    }
+   ],
+   "detail": "https://thewalletshift.com/api/services/26345"
+  },
+  {
+   "id": 26346,
+   "name": "Spraay Batch Payments",
+   "category": "defi-trade-execution",
+   "label": "Trading & On-Chain Execution",
+   "summary": "Multi-chain batch payment agent sending USDC/ETH to many recipients in one transaction (payroll, airdrops, splits).",
+   "ens": null,
+   "x402": false,
+   "protos": [
+    "mcp",
+    "a2a",
+    "web",
+    "x402"
+   ],
+   "skills_count": 14,
+   "endpoints": [
+    {
+     "proto": "mcp",
+     "name": "MCP",
+     "url": "https://gateway.spraay.app/mcp",
+     "health": {
+      "status": "dead",
+      "http": 404,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "a2a",
+     "name": "A2A",
+     "url": "https://gateway.spraay.app/.well-known/spraay-agent-card.json",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "web",
+     "name": "web",
+     "url": "https://spraay.app",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    },
+    {
+     "proto": "x402",
+     "name": "x402",
+     "url": "https://gateway.spraay.app",
+     "health": {
+      "status": "live",
+      "http": 200,
+      "last_probed": "2026-06-14T05:34:34.260Z",
+      "probe": "liveness"
+     }
+    }
+   ],
+   "detail": "https://thewalletshift.com/api/services/26346"
+  }
+ ],
+ "categories": [
+  {
+   "key": "defi-yield-rebalancing",
+   "label": "DeFi Yield Optimization & Portfolio Rebalancing",
+   "count": 455
+  },
+  {
+   "key": "conversational-assistant-general",
+   "label": "General Conversational & Personal AI Assistant",
+   "count": 48
+  },
+  {
+   "key": "market-data-analytics",
+   "label": "Crypto Market Data, Analytics & Research",
+   "count": 35
+  },
+  {
+   "key": "realworld-data-feeds",
+   "label": "Real-World Data Feeds (sports, space, geo, news, events)",
+   "count": 32
+  },
+  {
+   "key": "builder-infra-tooling",
+   "label": "Developer / Infrastructure & Automation Tooling",
+   "count": 28
+  },
+  {
+   "key": "defi-trade-execution",
+   "label": "Trading & On-Chain Execution",
+   "count": 27
+  },
+  {
+   "key": "content-creative-generation",
+   "label": "Content & Creative Generation",
+   "count": 18
+  },
+  {
+   "key": "task-execution-services",
+   "label": "Real-World Task & Booking Services",
+   "count": 15
+  },
+  {
+   "key": "knowledge-reference-apis",
+   "label": "Knowledge & Reference Lookup APIs",
+   "count": 14
+  },
+  {
+   "key": "dev-infra-intelligence",
+   "label": "Developer & Tech Intelligence Feeds",
+   "count": 12
+  },
+  {
+   "key": "identity-naming",
+   "label": "On-Chain Identity & Naming Infrastructure",
+   "count": 11
+  },
+  {
+   "key": "security-risk-scoring",
+   "label": "Security, Risk & Trust Scoring",
+   "count": 10
+  },
+  {
+   "key": "agent-economy-infrastructure",
+   "label": "Agent Economy & Token-Launch Infrastructure",
+   "count": 6
+  }
+ ],
+ "network": "ethereum-mainnet",
+ "generated_at": "2026-06-13",
+ "docs": "https://thewalletshift.com/SKILL.md"
+}

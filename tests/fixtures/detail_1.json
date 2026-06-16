@@ -1,0 +1,339 @@
+{
+ "id": 22838,
+ "name": "AgentEinstein",
+ "kind": "offchain",
+ "category": "defi-trade-execution",
+ "label": "Trading & On-Chain Execution",
+ "summary": "Autonomous crypto agent that analyzes markets and executes trades across multiple chains.",
+ "descr": "AI-powered autonomous crypto intelligence agent by E=MC2. Provides real-time market analysis, DeFi operations, smart money tracking, whale intelligence, and autonomous trading across Ethereum, Base, Arbitrum, Polygon, and Solana.",
+ "tags": [
+  "trade-signals",
+  "whale-tracking",
+  "autonomous-trading",
+  "altcoin-index"
+ ],
+ "protos": [
+  "a2a",
+  "mcp",
+  "web"
+ ],
+ "x402": true,
+ "ens": null,
+ "owner": "0xc9368b30bd620164fd1a05a5d99dcaf8ae754775",
+ "reg": "2026-02-02",
+ "endpoints": [
+  {
+   "proto": "a2a",
+   "name": "A2A",
+   "url": "https://emc2ai.io/api/a2a",
+   "host": "emc2ai.io",
+   "health": {
+    "status": "live",
+    "http": 200,
+    "last_probed": "2026-06-14T05:34:34.260Z",
+    "probe": "liveness"
+   }
+  },
+  {
+   "proto": "mcp",
+   "name": "MCP",
+   "url": "https://emc2ai.io/api/mcp",
+   "host": "emc2ai.io",
+   "health": {
+    "status": "live",
+    "http": 200,
+    "last_probed": "2026-06-14T05:34:34.260Z",
+    "probe": "liveness"
+   }
+  },
+  {
+   "proto": null,
+   "name": "REST",
+   "url": "https://emc2ai.io/api",
+   "host": "emc2ai.io",
+   "health": {
+    "status": "dead",
+    "http": null,
+    "last_probed": "2026-06-14T05:34:34.260Z",
+    "probe": "liveness"
+   }
+  },
+  {
+   "proto": "web",
+   "name": "web",
+   "url": "https://emc2ai.io",
+   "host": "emc2ai.io",
+   "health": {
+    "status": "live",
+    "http": 200,
+    "last_probed": "2026-06-14T05:34:34.260Z",
+    "probe": "liveness"
+   }
+  }
+ ],
+ "skills": [
+  {
+   "name": "Einstein Live Trade Signals",
+   "desc": "Stream Einstein's recent autonomous trade signals \u2014 every executed trade with full deterministic context: candidate-preranker rank/alpha-score, momentum band (RSI/MACD/MTF/StochRSI composite), regime, news classification (regulator/hack/exc",
+   "tags": [
+    "copy-trade",
+    "signals",
+    "autonomous",
+    "alpha",
+    "einstein",
+    "a2a"
+   ]
+  },
+  {
+   "name": "General AI Analysis",
+   "desc": "Send any prompt to Agent Einstein who autonomously selects tools, analyzes data, and provides intelligent responses. Use for complex questions requiring reasoning or multi-step analysis.",
+   "tags": [
+    "ai",
+    "analysis",
+    "general",
+    "reasoning"
+   ]
+  },
+  {
+   "name": "Altcoin Season Index",
+   "desc": "Real-time blockchaincenter-style Altcoin Season Index, computed in-house from CoinGecko top-50 minus stables and BTC/ETH derivatives. Returns: 90d index 0\u2013100, 30d index, rotation acceleration delta, regime classification (BTC season / BTC-",
+   "tags": [
+    "altseason",
+    "altcoin-season",
+    "rotation",
+    "regime",
+    "contrarian",
+    "btc-dominance"
+   ]
+  },
+  {
+   "name": "Top Gainers (Alpha-Ranked)",
+   "desc": "Today's biggest 24h gainers across the CoinGecko top-1000 universe (stablecoins and wrapped BTC/ETH derivatives filtered out) plus per-chain ecosystem gainers for Ethereum, Base, Arbitrum, BNB Chain, Polygon, and Optimism \u2014 RANKED BY CROSS-",
+   "tags": [
+    "top-gainers",
+    "biggest-movers",
+    "alpha",
+    "confluence",
+    "whale",
+    "momentum"
+   ]
+  },
+  {
+   "name": "AI Chart Forecast",
+   "desc": "Dual-model ML price forecast combining Google TimesFM and Kronos (12B+ K-lines from 45 exchanges) on full OHLC chart data. Returns multi-horizon drift %, direction (bullish/bearish/neutral), Kronos quantile bands (q10/q50/q90), CONSENSUS/DI",
+   "tags": [
+    "forecast",
+    "timesfm",
+    "kronos",
+    "ml",
+    "chart",
+    "prediction"
+   ]
+  },
+  {
+   "name": "Whale Intelligence",
+   "desc": "Token-centric whale accumulation view with net capital flows and smart money tracking.",
+   "tags": [
+    "whale",
+    "smart-money",
+    "tracking",
+    "accumulation"
+   ]
+  },
+  {
+   "name": "Smart Money Analysis",
+   "desc": "Rank top DEX wallets by trading volume and net buy/sell flow (accumulation vs distribution). Returns volume, trade count, and top tokens traded \u2014 not realized P&L or win rate.",
+   "tags": [
+    "smart-money",
+    "traders",
+    "wallets",
+    "performance"
+   ]
+  },
+  {
+   "name": "Wallet P&L X-Ray",
+   "desc": "Reconcile a wallet's true P&L before copy-trading it: gross cash flow, FIFO realized, unrealized (marked to market) and total \u2014 with caveats on illiquid-token pricing, routing-hop inflation, and cost-basis window, so a single number is neve",
+   "tags": [
+    "wallet",
+    "pnl",
+    "copy-trading",
+    "due-diligence",
+    "realized",
+    "unrealized"
+   ]
+  },
+  {
+   "name": "Top Gainers Analysis",
+   "desc": "Top gainers/losers analysis with volume, price change %, and market insights.",
+   "tags": [
+    "gainers",
+    "losers",
+    "volume",
+    "price"
+   ]
+  },
+  {
+   "name": "Market Movers",
+   "desc": "Detect significant price action and momentum signals across DEXes.",
+   "tags": [
+    "movers",
+    "momentum",
+    "price-action",
+    "signals"
+   ]
+  },
+  {
+   "name": "Token Security Scanner",
+   "desc": "Rug pull detection and security analysis with risk scoring.",
+   "tags": [
+    "security",
+    "audit",
+    "rug-pull",
+    "risk"
+   ]
+  },
+  {
+   "name": "Approval Security Scan",
+   "desc": "Find risky token approvals for a wallet \u2014 ERC-20 allowances, Permit2 granular allowances (held inside Uniswap Permit2), and ERC-721/1155 setApprovalForAll operator grants \u2014 with risk grading and USD value-at-risk, across 9 EVM chains. Body:",
+   "tags": [
+    "security",
+    "approvals",
+    "revoke",
+    "permit2",
+    "wallet"
+   ]
+  },
+  {
+   "name": "Claimable Airdrops Checker",
+   "desc": "Check a wallet for unclaimed airdrops and reward campaigns it is eligible for (via Merkl), with token, amount, USD value and claim link. Scans all supported chains unless one is specified. Body: { params: { address, chain? } }.",
+   "tags": [
+    "airdrops",
+    "rewards",
+    "claim",
+    "wallet",
+    "defi"
+   ]
+  },
+  {
+   "name": "Forgotten Assets Scanner",
+   "desc": "Find forgotten money for a wallet: dust/forgotten ERC-20 balances plus native ETH locked in legacy contracts (e.g. EtherDelta), priced via DefiLlama with recovery hints. Body: { params: { address, chain? } }.",
+   "tags": [
+    "recovery",
+    "dust",
+    "forgotten",
+    "wallet",
+    "lost-funds"
+   ]
+  },
+  {
+   "name": "MEV Detection",
+   "desc": "Sandwich attacks, front-running, and toxic flow analysis.",
+   "tags": [
+    "mev",
+    "sandwich",
+    "frontrun",
+    "toxic"
+   ]
+  },
+  {
+   "name": "EVM Mempool Watch",
+   "desc": "Live mempool subscription for a short window (30\u2013120s). Returns pending-tx insights: top priority-fee transactions (frontrun candidates), repeat-sender bot detection, gas-priority distribution. Supports Ethereum, Base, Arbitrum, Optimism, P",
+   "tags": [
+    "mempool",
+    "frontrun",
+    "sniper",
+    "pending",
+    "realtime"
+   ]
+  },
+  {
+   "name": "Holder Concentration",
+   "desc": "Token holder distribution analysis with concentration risk metrics.",
+   "tags": [
+    "holders",
+    "distribution",
+    "concentration",
+    "risk"
+   ]
+  },
+  {
+   "name": "Token Sniping Analysis",
+   "desc": "Early buyers analysis with bot detection and entry timing.",
+   "tags": [
+    "sniping",
+    "bots",
+    "early-buyers",
+    "launch"
+   ]
+  },
+  {
+   "name": "Arbitrage Scanner",
+   "desc": "Cross-chain and cross-DEX price discrepancies for arbitrage opportunities.",
+   "tags": [
+    "arbitrage",
+    "price-gaps",
+    "cross-chain",
+    "opportunities"
+   ]
+  },
+  {
+   "name": "Wallet Portfolio Analysis",
+   "desc": "Complete wallet portfolio breakdown with holdings and performance.",
+   "tags": [
+    "wallet",
+    "portfolio",
+    "holdings",
+    "balance"
+   ]
+  },
+  {
+   "name": "Pump.fun Launches",
+   "desc": "Fresh token launches on Pump.fun with bonding curve progress (Solana only).",
+   "tags": [
+    "pump.fun",
+    "launches",
+    "solana",
+    "bonding-curve"
+   ]
+  },
+  {
+   "name": "Zora Launchpad",
+   "desc": "Zora Launchpad token launches and volume analysis (Base only).",
+   "tags": [
+    "zora",
+    "launches",
+    "base",
+    "launchpad"
+   ]
+  },
+  {
+   "name": "Technical Analysis",
+   "desc": "RSI, MACD, Bollinger Bands, EMA crossover, VWAP, ATR, Volume Spike, and Stochastic RSI analysis for any token.",
+   "tags": [
+    "technical-analysis",
+    "indicators",
+    "rsi",
+    "macd",
+    "bollinger",
+    "ema"
+   ]
+  },
+  {
+   "name": "Wallet Trust Score",
+   "desc": "Score wallets by historical accuracy, profitability, consistency, and behavior. Identifies whales, smart money, KOLs, and bots.",
+   "tags": [
+    "trust",
+    "wallet-score",
+    "kol",
+    "smart-money",
+    "reputation"
+   ]
+  }
+ ],
+ "registry": "0x8004a169fb4a3325136eb29fa0ceb6d2e539a432",
+ "network": "ethereum-mainnet",
+ "how_to_call": "Connect directly to one of `endpoints`. The directory does not carry the per-skill request shape, so fetch the service's agent card first. A2A: GET <a2a-host>/.well-known/agent-card.json (some hosts use /.well-known/agent.json) \u2014 it declares the transport (often plain HTTP+JSON, e.g. POST /entrypoints/{skill}/invoke with {\"input\":{...}}; sometimes JSON-RPC) and each skill's input schema. MCP: open the mcp url as a Model Context Protocol server and tools/list. web/REST: see the service's own docs at that url. The `x402` flag is service-level and advisory: pricing is per-endpoint, some skills on an x402 service are free, and stated pricing can be wrong \u2014 the authoritative signal is the live response. A 200 was free; a 402 returns x402 payment terms (check `network`, often Base) to settle and retry. The Wallet Shift only indexes and points; it does not proxy calls or take payment.",
+ "ens_verify": null,
+ "search": "https://thewalletshift.com/api/services/search",
+ "docs": "https://thewalletshift.com/SKILL.md"
+}

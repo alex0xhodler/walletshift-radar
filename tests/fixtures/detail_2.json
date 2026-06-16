@@ -1,0 +1,451 @@
+{
+ "id": 28268,
+ "name": "EmblemAI",
+ "kind": "offchain",
+ "category": "defi-trade-execution",
+ "label": "Trading & On-Chain Execution",
+ "summary": "Crypto assistant executing token swaps, cross-chain trades, perps, and payments across many chains via plain English.",
+ "descr": "EmblemAI is your AI-powered crypto assistant \u2014 making blockchain workflows simpler to use. Trade tokens, swap across chains, check your portfolio, send payments, and explore DeFi without the usual complexity. Works across Solana, Ethereum, Base, BSC, Polygon, Hedera, Bitcoin. Just ask in plain English. Supports A2A for agent-to-agent collaboration and x402 for pay-per-use. Whether you're new to crypto or a seasoned trader, EmblemAI helps handle the hard parts for you.",
+ "tags": [
+  "swaps",
+  "cross-chain",
+  "perps",
+  "payments",
+  "multi-chain"
+ ],
+ "protos": [
+  "web",
+  "a2a",
+  "mcp",
+  "x402",
+  "ens"
+ ],
+ "x402": true,
+ "ens": "EmblemAI.eth",
+ "owner": "0x0bbeff1ee4114976f84d1e1c44150515719fd176",
+ "reg": "2026-03-03",
+ "endpoints": [
+  {
+   "proto": "web",
+   "name": "web",
+   "url": "https://agenthustle.ai",
+   "host": "agenthustle.ai",
+   "health": {
+    "status": "live",
+    "http": 200,
+    "last_probed": "2026-06-14T05:34:34.260Z",
+    "probe": "liveness"
+   }
+  },
+  {
+   "proto": "a2a",
+   "name": "A2A",
+   "url": "https://agenthustle.ai/.well-known/agent-card.json",
+   "host": "agenthustle.ai",
+   "health": {
+    "status": "live",
+    "http": 200,
+    "last_probed": "2026-06-14T05:34:34.260Z",
+    "probe": "liveness"
+   }
+  },
+  {
+   "proto": "mcp",
+   "name": "MCP",
+   "url": "https://agenthustle.ai/.well-known/mcp.json",
+   "host": "agenthustle.ai",
+   "health": {
+    "status": "dead",
+    "http": 405,
+    "last_probed": "2026-06-14T05:34:34.260Z",
+    "probe": "liveness"
+   }
+  },
+  {
+   "proto": null,
+   "name": "payg",
+   "url": "https://agenthustle.ai/api/payg",
+   "host": "agenthustle.ai",
+   "health": {
+    "status": "dead",
+    "http": 401,
+    "last_probed": "2026-06-14T05:34:34.260Z",
+    "probe": "liveness"
+   }
+  },
+  {
+   "proto": "x402",
+   "name": "x402",
+   "url": "https://agenthustle.ai/.well-known/x402",
+   "host": "agenthustle.ai",
+   "health": {
+    "status": "live",
+    "http": 200,
+    "last_probed": "2026-06-14T05:34:34.260Z",
+    "probe": "liveness"
+   }
+  },
+  {
+   "proto": null,
+   "name": "OASF",
+   "url": "https://github.com/agntcy/oasf/",
+   "host": "github.com",
+   "health": {
+    "status": "live",
+    "http": 200,
+    "last_probed": "2026-06-14T05:34:34.260Z",
+    "probe": "liveness"
+   }
+  },
+  {
+   "proto": null,
+   "name": "toolDiscovery",
+   "url": "https://agenthustle.ai/api/tools/discover",
+   "host": "agenthustle.ai",
+   "health": {
+    "status": "live",
+    "http": 200,
+    "last_probed": "2026-06-14T05:34:34.260Z",
+    "probe": "liveness"
+   }
+  },
+  {
+   "proto": null,
+   "name": "toolPricing",
+   "url": "https://agenthustle.ai/api/tools/pricing/{paymentToken}",
+   "host": "agenthustle.ai",
+   "health": {
+    "status": "dead",
+    "http": 400,
+    "last_probed": "2026-06-14T05:34:34.260Z",
+    "probe": "liveness"
+   }
+  },
+  {
+   "proto": null,
+   "name": "toolExecute",
+   "url": "https://agenthustle.ai/api/tools/execute/{paymentToken}/{toolName}",
+   "host": "agenthustle.ai",
+   "health": {
+    "status": "dead",
+    "http": 400,
+    "last_probed": "2026-06-14T05:34:34.260Z",
+    "probe": "liveness"
+   }
+  },
+  {
+   "proto": null,
+   "name": "email",
+   "url": "mailto:hello@emblemvault.ai",
+   "host": ""
+  },
+  {
+   "proto": "ens",
+   "name": "ENS",
+   "url": "EmblemAI.eth",
+   "host": "EmblemAI.eth"
+  },
+  {
+   "proto": null,
+   "name": "agentWallet",
+   "url": "eip155:8453:0x0BbEFF1EE4114976F84D1e1C44150515719fD176",
+   "host": ""
+  }
+ ],
+ "skills": [
+  {
+   "name": "Required",
+   "desc": "Always loaded (wallet, positions, memory, price calculations)",
+   "tags": [
+    "required",
+    "trading",
+    "wallet",
+    "wallet-management",
+    "balance-check",
+    "token-send"
+   ]
+  },
+  {
+   "name": "Solana",
+   "desc": "Solana swaps, balances, conditional orders, tokenized stocks discovery",
+   "tags": [
+    "solana",
+    "trading",
+    "spl-token",
+    "dex",
+    "token-swap",
+    "balance-check"
+   ]
+  },
+  {
+   "name": "Ethereum",
+   "desc": "Ethereum swaps, balances, conditional orders",
+   "tags": [
+    "ethereum",
+    "trading",
+    "erc-20",
+    "dex",
+    "token-swap",
+    "balance-check"
+   ]
+  },
+  {
+   "name": "Bsc",
+   "desc": "BSC swaps, balances, conditional orders",
+   "tags": [
+    "bsc",
+    "trading",
+    "binance-smart-chain",
+    "dex",
+    "token-swap",
+    "balance-check"
+   ]
+  },
+  {
+   "name": "Polygon",
+   "desc": "Polygon swaps, balances, conditional orders",
+   "tags": [
+    "polygon",
+    "trading",
+    "dex",
+    "token-swap",
+    "balance-check",
+    "token-send"
+   ]
+  },
+  {
+   "name": "Hedera",
+   "desc": "Hedera swaps, balances, conditional orders",
+   "tags": [
+    "hedera",
+    "trading",
+    "hbar",
+    "dex",
+    "token-swap",
+    "balance-check"
+   ]
+  },
+  {
+   "name": "Base",
+   "desc": "Base swaps, balances, conditional orders, Clanker meme tokens",
+   "tags": [
+    "base",
+    "trading",
+    "dex",
+    "token-swap",
+    "balance-check",
+    "token-send"
+   ]
+  },
+  {
+   "name": "Hyperliquid",
+   "desc": "Hyperliquid perps & spot \u2014 account, positions, open/historical orders, fills, funding, market data (read-only)",
+   "tags": [
+    "hyperliquid",
+    "analytics",
+    "perps",
+    "perpetuals",
+    "derivatives",
+    "futures"
+   ]
+  },
+  {
+   "name": "Ordiscan",
+   "desc": "Bitcoin ordinals, runes, inscriptions, BRC20",
+   "tags": [
+    "ordiscan",
+    "analytics",
+    "bitcoin",
+    "ordinals",
+    "runes",
+    "inscriptions"
+   ]
+  },
+  {
+   "name": "Coinglass",
+   "desc": "Futures, funding rates, ETF flows, liquidations, open interest",
+   "tags": [
+    "coinglass",
+    "analytics",
+    "derivatives",
+    "futures",
+    "funding-rates",
+    "open-interest"
+   ]
+  },
+  {
+   "name": "Polymarket",
+   "desc": "Prediction markets, betting, event outcomes",
+   "tags": [
+    "polymarket",
+    "analytics",
+    "prediction-markets",
+    "event-outcomes",
+    "odds",
+    "markets"
+   ]
+  },
+  {
+   "name": "Opensea",
+   "desc": "NFTs, collections, listings, offers (Ethereum NFTs)",
+   "tags": [
+    "opensea",
+    "analytics",
+    "nft",
+    "nft-collections",
+    "nft-listings",
+    "nft-offers"
+   ]
+  },
+  {
+   "name": "Advanced Search",
+   "desc": "Web search, news, documentation lookup",
+   "tags": [
+    "advanced-search",
+    "analytics",
+    "web-search",
+    "market-research",
+    "documentation",
+    "crypto-news"
+   ]
+  },
+  {
+   "name": "Nansen",
+   "desc": "Smart money analytics, whale tracking, wallet profiling, perp positions, token screening via Nansen",
+   "tags": [
+    "nansen",
+    "analytics",
+    "smart-money",
+    "whale-tracking",
+    "wallet-profiling",
+    "token-screening"
+   ]
+  },
+  {
+   "name": "Emblem",
+   "desc": "Emblem Vaults - create, mint, and manage encrypted digital asset vaults",
+   "tags": [
+    "emblem",
+    "analytics",
+    "emblem-vault",
+    "vault",
+    "encrypted-vault",
+    "mint"
+   ]
+  },
+  {
+   "name": "Token Swap",
+   "desc": "Swap tokens on supported DEX venues and networks (best-effort based on available routes, liquidity, and tool constraints).",
+   "tags": [
+    "swap",
+    "token-swap",
+    "dex",
+    "defi",
+    "trading",
+    "solana"
+   ]
+  },
+  {
+   "name": "Balance Check",
+   "desc": "Check wallet balances and token holdings across supported networks (coverage varies by chain and token standard).",
+   "tags": [
+    "wallet",
+    "balance-check",
+    "portfolio",
+    "holdings",
+    "solana",
+    "ethereum"
+   ]
+  },
+  {
+   "name": "Token Send",
+   "desc": "Prepare and send token transfers on supported networks (requires a destination address and sufficient balance; fees apply).",
+   "tags": [
+    "send",
+    "transfer",
+    "token-send",
+    "wallet",
+    "onchain",
+    "solana"
+   ]
+  },
+  {
+   "name": "Token Price",
+   "desc": "Fetch token prices/quotes (spot or best available) to support decisions like sizing, slippage checks, and portfolio summaries.",
+   "tags": [
+    "price",
+    "token-price",
+    "quote",
+    "market-data",
+    "solana",
+    "ethereum"
+   ]
+  },
+  {
+   "name": "Wallet Management",
+   "desc": "Help with wallet-oriented workflows like preparing transactions, checking addresses, and summarizing holdings (execution depends on authorization and connected wallet context).",
+   "tags": [
+    "wallet",
+    "wallet-management",
+    "portfolio",
+    "onchain",
+    "solana",
+    "ethereum"
+   ]
+  },
+  {
+   "name": "Cross-Chain Swap (Bridge)",
+   "desc": "Perform best-effort cross-chain swaps via supported providers (e.g. ChangeNow). Availability and rates depend on live support for the selected assets and networks.",
+   "tags": [
+    "cross-chain",
+    "cross-chain-bridge",
+    "bridge",
+    "swap",
+    "changenow",
+    "bitcoin"
+   ]
+  },
+  {
+   "name": "Token Analysis",
+   "desc": "Analyze tokens and market activity using available analytics sources (e.g. smart-money signals, derivatives metrics, and web research).",
+   "tags": [
+    "token-analysis",
+    "market-analytics",
+    "research",
+    "smart-money",
+    "derivatives",
+    "nansen"
+   ]
+  },
+  {
+   "name": "NFT Operations",
+   "desc": "View NFT collections, listings, and offers via supported marketplaces (primarily OpenSea; coverage depends on chain and collection).",
+   "tags": [
+    "nft",
+    "nft-operations",
+    "nft-collections",
+    "nft-listings",
+    "nft-offers",
+    "opensea"
+   ]
+  },
+  {
+   "name": "Gas / Fee Estimation",
+   "desc": "Estimate transaction fees (best-effort) using available quotes/simulations; final gas/fees can differ at execution time.",
+   "tags": [
+    "gas-estimation",
+    "fees",
+    "gas-fees",
+    "transaction-fees",
+    "ethereum",
+    "base"
+   ]
+  }
+ ],
+ "registry": "0x8004a169fb4a3325136eb29fa0ceb6d2e539a432",
+ "network": "ethereum-mainnet",
+ "how_to_call": "Connect directly to one of `endpoints`. The directory does not carry the per-skill request shape, so fetch the service's agent card first. A2A: GET <a2a-host>/.well-known/agent-card.json (some hosts use /.well-known/agent.json) \u2014 it declares the transport (often plain HTTP+JSON, e.g. POST /entrypoints/{skill}/invoke with {\"input\":{...}}; sometimes JSON-RPC) and each skill's input schema. MCP: open the mcp url as a Model Context Protocol server and tools/list. web/REST: see the service's own docs at that url. The `x402` flag is service-level and advisory: pricing is per-endpoint, some skills on an x402 service are free, and stated pricing can be wrong \u2014 the authoritative signal is the live response. A 200 was free; a 402 returns x402 payment terms (check `network`, often Base) to settle and retry. The Wallet Shift only indexes and points; it does not proxy calls or take payment.",
+ "ens_verify": "https://thewalletshift.com/api/ens?name=EmblemAI.eth&address=0x0bbeff1ee4114976f84d1e1c44150515719fd176",
+ "search": "https://thewalletshift.com/api/services/search",
+ "docs": "https://thewalletshift.com/SKILL.md"
+}
