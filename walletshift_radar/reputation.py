@@ -54,9 +54,11 @@ BASE_DEPLOY_BLOCK       = 24_000_000
 # BSC ReputationRegistry deployed ~Feb 2026; skip the first ~55M empty blocks.
 BSC_DEPLOY_BLOCK        = 55_000_000
 # Lookback for chains where full history is impractical on first run.
-# Arc testnet and Base: scan only the last 500K blocks on first run (~11 days on Base,
-# ~2-3 days on Arc testnet at 0.4 s/block) to capture current Sybil signals.
-ARC_TESTNET_LOOKBACK    = 500_000
+# Base: scan last 500K blocks (~11 days) to capture current Sybil signals.
+# Arc testnet: dense activity (~3,700 events/1K blocks); scan last 50K blocks
+# (~6 hours) to avoid indexing millions of testnet events on first run.
+# Subsequent runs resume from MAX(block_number) regardless of this setting.
+ARC_TESTNET_LOOKBACK    = 50_000
 BASE_LOOKBACK           = 500_000
 
 # ── RPC helper ────────────────────────────────────────────────────────────────
