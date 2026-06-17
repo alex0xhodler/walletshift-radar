@@ -558,6 +558,92 @@ def run(db_path: str, out_path: str, alchemy_key: str,
 
 # ── CLI ───────────────────────────────────────────────────────────────────────
 
+def _run_reputation_scan(db_path: str, alchemy_key: str) -> None:
+    """
+    Index NewFeedback events on all monitored chains and rebuild aggregates.
+
+    Chains scanned (alchemy_key retained for future paid-plan upgrades):
+      1       Ethereum Mainnet  — PublicNode (50K-block chunks, no key needed)
+      8453    Base              — public RPC, 2 K chunk, 0.2 s throttle
+      56      BSC               — configurable via BSC_RPC_URL env var; skipped
+                                  gracefully if the RPC doesn't support eth_getLogs
+      5042002 Arc Testnet       — public RPC, 1 K chunk, 0.5 s throttle;
+                                  on first run scans last 500 K blocks only
+    """
+    import urllib.error
+    from walletshift_radar.db import migrate_reputation_schema
+    from walletshift_radar.reputation import (
+        scan_chain, recompute_sybil_collisions, recompute_agent_reputation,
+        MAINNET_REPUTATION, MAINNET_LOGS_RPC, MAINNET_CHUNK, MAINNET_DEPLOY_BLOCK,
+        BASE_REPUTATION, BASE_RPC, BASE_DEPLOY_BLOCK, BASE_LOOKBACK,
+        BSC_REPUTATION, BSC_RPC_DEFAULT, BSC_DEPLOY_BLOCK,
+        ARC_TESTNET_REPUTATION, ARC_TESTNET_RPC, ARC_CHUNK, ARC_TESTNET_LOOKBACK,
+    )
+
+    conn = sqlite3.connect(db_path)
+    conn.row_factory = sqlite3.Row
+    migrate_reputation_schema(conn)
+
+    try:
+        mainnet_rpc = os.environ.get("MAINNET_ETH_LOGS_RPC", MAINNET_LOGS_RPC)
+        print(f"Scanning Ethereum Mainnet ReputationRegistry ({mainnet_rpc})…")
+        n_mainnet = scan_chain(
+            mainnet_rpc, MAINNET_REPUTATION, chain_id=1, conn=conn,
+            chunk=MAINNET_CHUNK, throttle=0.3, genesis_block=MAINNET_DEPLOY_BLOCK,
+        )
+        print(f"  {n_mainnet:,} new events")
+
+        print("Scanning Base ReputationRegistry…")
+        n_base = scan_chain(
+            BASE_RPC, BASE_REPUTATION, chain_id=8453, conn=conn,
+            throttle=0.2, genesis_block=BASE_DEPLOY_BLOCK, lookback_blocks=BASE_LOOKBACK,
+        )
+        print(f"  {n_base:,} new events")
+
+        bsc_rpc = os.environ.get("BSC_RPC_URL", BSC_RPC_DEFAULT)
+        print(f"Scanning BSC ReputationRegistry ({bsc_rpc})…")
+        try:
+            n_bsc = scan_chain(
+                bsc_rpc, BSC_REPUTATION, chain_id=56, conn=conn,
+                throttle=0.5, genesis_block=BSC_DEPLOY_BLOCK,
+            )
+            print(f"  {n_bsc:,} new events")
+        except (urllib.error.URLError, KeyError, ValueError) as exc:
+            print(f"  ⚠ BSC scan skipped ({exc}). Set BSC_RPC_URL to a provider "
+                  "that supports eth_getLogs (NodeReal, Ankr, etc.).")
+
+        print("Scanning Arc Testnet ReputationRegistry…")
+        try:
+            n_arc = scan_chain(
+                ARC_TESTNET_RPC, ARC_TESTNET_REPUTATION,
+                chain_id=5042002, conn=conn,
+                chunk=ARC_CHUNK, throttle=0.5,
+                lookback_blocks=ARC_TESTNET_LOOKBACK,
+            )
+            print(f"  {n_arc:,} new events")
+        except (urllib.error.URLError, KeyError, ValueError) as exc:
+            print(f"  ⚠ Arc Testnet scan skipped ({exc}).")
+
+        print("Recomputing Sybil collision tables…")
+        recompute_sybil_collisions(conn)
+        recompute_agent_reputation(conn)
+
+        total = conn.execute("SELECT COUNT(*) FROM reputation_events").fetchone()[0]
+        flagged = conn.execute(
+            "SELECT COUNT(*) FROM agent_reputation WHERE sybil_flag=1"
+        ).fetchone()[0]
+        by_chain = conn.execute("""
+            SELECT chain_id, COUNT(*) FROM reputation_events GROUP BY chain_id
+        """).fetchall()
+        print(f"Done. {total:,} total events, {flagged} agents Sybil-flagged.")
+        chain_labels = {1: "mainnet", 8453: "base", 56: "bsc", 5042002: "arc_testnet"}
+        for row in by_chain:
+            label = chain_labels.get(row[0], f"chain_{row[0]}")
+            print(f"  {label}: {row[1]:,} events")
+    finally:
+        conn.close()
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="WalletShift Radar — on-chain daily pipeline")
     parser.add_argument("--db",         default="walletshift.db")
@@ -570,11 +656,18 @@ def main() -> None:
                         help="One-time historical seed from walletshift API")
     parser.add_argument("--no-chain-scan", action="store_true",
                         help="Skip on-chain block scan (walletshift seed only; no Alchemy key needed)")
+    parser.add_argument("--reputation", action="store_true",
+                        help="Index NewFeedback events from ReputationRegistry on mainnet + Base "
+                             "and recompute Sybil collision tables")
     args = parser.parse_args()
 
-    if not args.alchemy and not args.no_chain_scan:
+    if not args.alchemy and not args.no_chain_scan and not args.reputation:
         raise SystemExit("ERROR: --alchemy KEY or ALCHEMY_KEY env var required "
                          "(or use --no-chain-scan to skip on-chain data)")
+
+    if args.reputation:
+        _run_reputation_scan(args.db, args.alchemy)
+        return
 
     run_date = args.date or date.today().isoformat()
     run(args.db, args.out, args.alchemy, run_date,

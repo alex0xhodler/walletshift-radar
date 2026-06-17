@@ -96,6 +96,55 @@ def init_db(conn: sqlite3.Connection) -> None:
     conn.commit()
 
 
+_REPUTATION_SCHEMA = """
+CREATE TABLE IF NOT EXISTS reputation_events (
+    chain_id          INTEGER NOT NULL,
+    block_number      INTEGER NOT NULL,
+    tx_hash           TEXT    NOT NULL,
+    log_index         INTEGER NOT NULL,
+    agent_id          INTEGER NOT NULL,
+    client            TEXT    NOT NULL,
+    feedback_uri_hash TEXT    NOT NULL,
+    score             REAL,
+    PRIMARY KEY (chain_id, tx_hash, log_index)
+);
+
+CREATE TABLE IF NOT EXISTS agent_reputation (
+    chain_id         INTEGER NOT NULL,
+    agent_id         INTEGER NOT NULL,
+    unique_reviewers INTEGER NOT NULL DEFAULT 0,
+    avg_score        REAL,
+    min_score        REAL,
+    max_score        REAL,
+    sybil_flag       INTEGER NOT NULL DEFAULT 0,
+    last_block       INTEGER,
+    last_updated     TEXT,
+    PRIMARY KEY (chain_id, agent_id)
+);
+
+CREATE TABLE IF NOT EXISTS sybil_collisions (
+    chain_id          INTEGER NOT NULL,
+    feedback_uri_hash TEXT    NOT NULL,
+    event_count       INTEGER NOT NULL,
+    distinct_clients  INTEGER NOT NULL,
+    distinct_agents   INTEGER NOT NULL,
+    last_updated      TEXT,
+    PRIMARY KEY (chain_id, feedback_uri_hash)
+);
+
+CREATE INDEX IF NOT EXISTS idx_rep_events_agent
+    ON reputation_events(chain_id, agent_id);
+CREATE INDEX IF NOT EXISTS idx_rep_events_hash
+    ON reputation_events(chain_id, feedback_uri_hash);
+"""
+
+
+def migrate_reputation_schema(conn: sqlite3.Connection) -> None:
+    """Add reputation tables to an existing walletshift.db (idempotent)."""
+    conn.executescript(_REPUTATION_SCHEMA)
+    conn.commit()
+
+
 # ── upsert helpers ────────────────────────────────────────────────────────────
 
 def upsert_agent(conn: sqlite3.Connection, agent: dict,
