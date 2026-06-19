@@ -680,13 +680,8 @@ def main() -> None:
                              "and recompute Sybil collision tables")
     args = parser.parse_args()
 
-    if not args.alchemy and not args.eth_rpc and not args.no_chain_scan and not args.reputation:
-        raise SystemExit(
-            "ERROR: Ethereum RPC required for chain scan.\n"
-            "  Use --eth-rpc URL (any provider) or --alchemy KEY (Alchemy legacy).\n"
-            "  Set ETH_MAINNET_RPC_URL env var to avoid passing it each time.\n"
-            "  Use --no-chain-scan to skip on-chain scanning entirely."
-        )
+    # No validation needed: _resolve_eth_rpc() always returns a URL
+    # (mevblocker default when neither --alchemy nor --eth-rpc is given).
 
     if args.reputation:
         _run_reputation_scan(args.db, args.alchemy)
