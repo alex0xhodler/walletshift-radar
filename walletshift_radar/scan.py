@@ -1,9 +1,12 @@
 """
-scan.py — on-chain ERC-8004 agent discovery via Alchemy RPC.
+scan.py — on-chain ERC-8004 agent discovery via standard JSON-RPC.
 
 Scans for new token mints on the ERC-8004 registry since last_scanned_block,
 resolves tokenURI → IPFS/HTTPS metadata, filters real service agents, probes
 endpoint health.
+
+Works with any EVM JSON-RPC provider (Chainstack, Infura, publicnode.com, etc.).
+Set ETH_MAINNET_RPC_URL (or pass --eth-rpc) to configure the Ethereum endpoint.
 
 Zero walletshift dependency for discovery.  Walletshift overlay (category labels,
 existing snapshots) is applied separately in main.py.
@@ -19,6 +22,11 @@ REGISTRY    = "0x8004a169fb4a3325136eb29fa0ceb6d2e539a432"
 ZERO_ADDR   = "0x0000000000000000000000000000000000000000"
 TOKEN_URI_SIG = "0xc87b56dd"   # keccak4("tokenURI(uint256)")
 
+# keccak256("Transfer(address,address,uint256)") — standard ERC-721 mint detection
+TRANSFER_SIG = "0xddf252ad1be2c89b69c2b068fc378daa952ba7f163c4a11628f55a4df523b3ef"
+ZERO_TOPIC   = "0x0000000000000000000000000000000000000000000000000000000000000000"
+_MINT_CHUNK  = 2_000  # blocks per eth_getLogs call; safe for Chainstack + public nodes
+
 IPFS_GATEWAYS = [
     "https://cloudflare-ipfs.com/ipfs/",
     "https://ipfs.io/ipfs/",
@@ -31,10 +39,10 @@ _META_TIMEOUT  = 10   # seconds for IPFS/metadata fetch
 
 # ── RPC helpers ───────────────────────────────────────────────────────────────
 
-def _rpc(alchemy_url: str, method: str, params: list) -> dict:
+def _rpc(rpc_url: str, method: str, params: list) -> dict:
     body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": method, "params": params})
     req  = urllib.request.Request(
-        alchemy_url,
+        rpc_url,
         data=body.encode(),
         headers={"Content-Type": "application/json"},
         method="POST",
@@ -43,67 +51,66 @@ def _rpc(alchemy_url: str, method: str, params: list) -> dict:
         return json.loads(r.read())
 
 
-def get_latest_block(alchemy_url: str) -> int:
-    resp = _rpc(alchemy_url, "eth_blockNumber", [])
+def get_latest_block(rpc_url: str) -> int:
+    resp = _rpc(rpc_url, "eth_blockNumber", [])
     return int(resp["result"], 16)
 
 
-def get_new_mints(alchemy_url: str, from_block: int, to_block: int) -> list:
+def get_new_mints(rpc_url: str, from_block: int, to_block: int) -> list:
     """
     Return all ERC-8004 mint events (Transfer from 0x0) between from_block and to_block.
 
-    Uses alchemy_getAssetTransfers — no block-range limitation on Alchemy free tier.
-    Paginates automatically.
+    Uses standard eth_getLogs — compatible with any JSON-RPC provider
+    (Chainstack, Infura, publicnode.com, etc.).  Chunks in _MINT_CHUNK-block
+    windows to stay within provider rate limits.
 
     Returns list of {token_id: int, block_num: int, block_timestamp: str}.
     """
-    mints    = []
-    page_key = None
+    mints = []
+    start = from_block
 
-    while True:
-        params: dict = {
-            "fromAddress":       ZERO_ADDR,
-            "contractAddresses": [REGISTRY],
-            "category":          ["erc721"],
-            "fromBlock":         hex(from_block),
-            "toBlock":           hex(to_block),
-            "order":             "asc",
-            "maxCount":          "0x64",   # 100 per page
-            "withMetadata":      True,
-        }
-        if page_key:
-            params["pageKey"] = page_key
+    while start <= to_block:
+        end  = min(start + _MINT_CHUNK - 1, to_block)
+        resp = _rpc(rpc_url, "eth_getLogs", [{
+            "fromBlock": hex(start),
+            "toBlock":   hex(end),
+            "address":   REGISTRY,
+            "topics": [
+                TRANSFER_SIG,
+                ZERO_TOPIC,   # from = 0x0 → mint event only
+            ],
+        }])
 
-        resp     = _rpc(alchemy_url, "alchemy_getAssetTransfers", [params])
-        result   = resp.get("result", {})
-        transfers = result.get("transfers", [])
+        if resp.get("error"):
+            raise RuntimeError(
+                f"eth_getLogs error (blocks {start}-{end}): {resp['error']}"
+            )
 
-        for t in transfers:
-            raw_id = t.get("tokenId") or "0x0"
-            try:
-                tid = int(raw_id, 16)
-            except (ValueError, TypeError):
-                continue
+        for log in resp.get("result", []):
+            topics = log.get("topics", [])
+            if len(topics) < 4:
+                continue   # not ERC-721 Transfer (tokenId is topics[3])
+            token_id  = int(topics[3], 16)
+            block_num = int(log.get("blockNumber", "0x0"), 16)
             mints.append({
-                "token_id":        tid,
-                "block_num":       int(t.get("blockNum", "0x0"), 16),
-                "block_timestamp": (t.get("metadata") or {}).get("blockTimestamp", ""),
+                "token_id":        token_id,
+                "block_num":       block_num,
+                "block_timestamp": "",
             })
 
-        page_key = result.get("pageKey")
-        if not page_key:
-            break
-        time.sleep(0.1)
+        start = end + 1
+        if start <= to_block:
+            time.sleep(0.05)
 
     return mints
 
 
 # ── tokenURI + metadata resolution ───────────────────────────────────────────
 
-def get_token_uri(alchemy_url: str, token_id: int) -> Optional[str]:
+def get_token_uri(rpc_url: str, token_id: int) -> Optional[str]:
     """Call tokenURI(token_id) on the registry, return the URI string or None."""
     padded = hex(token_id)[2:].zfill(64)
-    resp   = _rpc(alchemy_url, "eth_call", [
+    resp   = _rpc(rpc_url, "eth_call", [
         {"to": REGISTRY, "data": TOKEN_URI_SIG + padded}, "latest"
     ])
     raw = resp.get("result", "")
@@ -222,7 +229,7 @@ def probe_agent_endpoints(services: list) -> list:
 
 # ── full per-token enrichment ─────────────────────────────────────────────────
 
-def enrich_token(alchemy_url: str, token_id: int,
+def enrich_token(rpc_url: str, token_id: int,
                  probe: bool = True) -> Optional[dict]:
     """
     Full enrichment for a single token_id:
@@ -231,7 +238,7 @@ def enrich_token(alchemy_url: str, token_id: int,
     Returns a dict ready to be stored, or None if not a real service agent
     or if metadata is unresolvable (caller should retry next run).
     """
-    uri = get_token_uri(alchemy_url, token_id)
+    uri = get_token_uri(rpc_url, token_id)
     if not uri:
         return None
 
