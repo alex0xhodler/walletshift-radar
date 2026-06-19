@@ -56,7 +56,9 @@ from .render   import render_dashboard
 _DEFAULT_START_BLOCK = 25_280_000
 
 _ALCHEMY_BASE = "https://eth-mainnet.g.alchemy.com/v2/"
-_PUBLIC_ETH   = "https://ethereum.publicnode.com"
+# publicnode.com returns 403 for eth_getLogs on blocks older than ~48h.
+# mevblocker.io provides free public RPC with full historical eth_getLogs.
+_PUBLIC_ETH   = "https://rpc.mevblocker.io"
 
 
 def _resolve_eth_rpc(alchemy_key: str = "", eth_rpc: str = "") -> str:

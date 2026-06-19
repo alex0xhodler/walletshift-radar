@@ -39,7 +39,7 @@ _META_TIMEOUT  = 10   # seconds for IPFS/metadata fetch
 
 # ── RPC helpers ───────────────────────────────────────────────────────────────
 
-def _rpc(rpc_url: str, method: str, params: list) -> dict:
+def _rpc(rpc_url: str, method: str, params: list, retries: int = 3) -> dict:
     body = json.dumps({"jsonrpc": "2.0", "id": 1, "method": method, "params": params})
     req  = urllib.request.Request(
         rpc_url,
@@ -50,8 +50,15 @@ def _rpc(rpc_url: str, method: str, params: list) -> dict:
         },
         method="POST",
     )
-    with urllib.request.urlopen(req, timeout=20) as r:
-        return json.loads(r.read())
+    for attempt in range(retries):
+        try:
+            with urllib.request.urlopen(req, timeout=25) as r:
+                return json.loads(r.read())
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            if attempt == retries - 1:
+                raise
+            time.sleep(2 ** attempt)
+    return {}
 
 
 def get_latest_block(rpc_url: str) -> int:
