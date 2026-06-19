@@ -263,7 +263,7 @@ def run(db_path: str, out_path: str, alchemy_key: str,
 
     for mint in new_mints:  # empty list when no_chain_scan=True
         tid = mint["token_id"]
-        time.sleep(0.15)
+        time.sleep(0.3)   # mevblocker rate-limit: ~3 eth_call/s is safe
         enriched = enrich_token(url, tid, probe=True)
 
         if enriched is None:

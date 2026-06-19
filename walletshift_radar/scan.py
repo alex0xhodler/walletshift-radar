@@ -54,6 +54,16 @@ def _rpc(rpc_url: str, method: str, params: list, retries: int = 3) -> dict:
         try:
             with urllib.request.urlopen(req, timeout=25) as r:
                 return json.loads(r.read())
+        except urllib.error.HTTPError as exc:
+            if exc.code == 429:
+                # Rate-limited: back off longer before retry
+                if attempt == retries - 1:
+                    raise
+                time.sleep(5 * (attempt + 1))
+            elif attempt == retries - 1:
+                raise
+            else:
+                time.sleep(2 ** attempt)
         except (urllib.error.URLError, TimeoutError, OSError) as exc:
             if attempt == retries - 1:
                 raise
