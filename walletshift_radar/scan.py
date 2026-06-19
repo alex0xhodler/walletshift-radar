@@ -44,7 +44,10 @@ def _rpc(rpc_url: str, method: str, params: list) -> dict:
     req  = urllib.request.Request(
         rpc_url,
         data=body.encode(),
-        headers={"Content-Type": "application/json"},
+        headers={
+            "Content-Type": "application/json",
+            "User-Agent":   "walletshift-radar/1.0",
+        },
         method="POST",
     )
     with urllib.request.urlopen(req, timeout=20) as r:
