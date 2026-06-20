@@ -19,5 +19,8 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Install test dependencies
+        run: pip install pytest
+
       - name: Run tests
         run: python -m pytest tests/ -v --tb=short
