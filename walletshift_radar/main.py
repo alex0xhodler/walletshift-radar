@@ -55,11 +55,24 @@ from .render   import render_dashboard
 # (June 13 ≈ block 25,304,816; we use 25,280,000 for a small safety buffer.)
 _DEFAULT_START_BLOCK = 25_280_000
 
-ALCHEMY_BASE = "https://eth-mainnet.g.alchemy.com/v2/"
+_ALCHEMY_BASE = "https://eth-mainnet.g.alchemy.com/v2/"
+# publicnode.com returns 403 for eth_getLogs on blocks older than ~48h.
+# mevblocker.io provides free public RPC with full historical eth_getLogs.
+_PUBLIC_ETH   = "https://rpc.mevblocker.io"
 
 
-def _alchemy_url(key: str) -> str:
-    return ALCHEMY_BASE + key
+def _resolve_eth_rpc(alchemy_key: str = "", eth_rpc: str = "") -> str:
+    """
+    Determine the Ethereum mainnet RPC URL to use, in priority order:
+      1. --eth-rpc CLI argument (or ETH_MAINNET_RPC_URL env var, resolved by argparse)
+      2. --alchemy KEY (legacy; builds https://eth-mainnet.g.alchemy.com/v2/{KEY})
+      3. https://ethereum.publicnode.com (public, no auth, 50K block range)
+    """
+    if eth_rpc:
+        return eth_rpc
+    if alchemy_key:
+        return _ALCHEMY_BASE + alchemy_key
+    return _PUBLIC_ETH
 
 
 # ── snapshot metrics ──────────────────────────────────────────────────────────
@@ -212,9 +225,9 @@ def _momentum_boards(conn: sqlite3.Connection, run_date: str,
 
 def run(db_path: str, out_path: str, alchemy_key: str,
         run_date: str, full_probe: bool, seed_from_walletshift: bool,
-        no_chain_scan: bool = False) -> None:
+        no_chain_scan: bool = False, eth_rpc: str = "") -> None:
 
-    url  = _alchemy_url(alchemy_key) if alchemy_key else ""
+    url  = _resolve_eth_rpc(alchemy_key, eth_rpc)
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     init_db(conn)
@@ -250,7 +263,7 @@ def run(db_path: str, out_path: str, alchemy_key: str,
 
     for mint in new_mints:  # empty list when no_chain_scan=True
         tid = mint["token_id"]
-        time.sleep(0.15)
+        time.sleep(0.3)   # mevblocker rate-limit: ~3 eth_call/s is safe
         enriched = enrich_token(url, tid, probe=True)
 
         if enriched is None:
@@ -362,7 +375,7 @@ def run(db_path: str, out_path: str, alchemy_key: str,
         "category_count":    cat_count,
         "chain_only":        chain_only_count,
         "last_scanned_block": latest_block,
-        "source_note":       "on-chain (Alchemy RPC)",
+        "source_note":       f"on-chain ({url})",
     }
     upsert_directory_stats(conn, run_date, dir_stats)
 
@@ -593,9 +606,10 @@ def _run_reputation_scan(db_path: str, alchemy_key: str) -> None:
         )
         print(f"  {n_mainnet:,} new events")
 
-        print("Scanning Base ReputationRegistry…")
+        base_rpc = os.environ.get("BASE_RPC_URL", BASE_RPC)
+        print(f"Scanning Base ReputationRegistry ({base_rpc})…")
         n_base = scan_chain(
-            BASE_RPC, BASE_REPUTATION, chain_id=8453, conn=conn,
+            base_rpc, BASE_REPUTATION, chain_id=8453, conn=conn,
             throttle=0.2, genesis_block=BASE_DEPLOY_BLOCK, lookback_blocks=BASE_LOOKBACK,
         )
         print(f"  {n_base:,} new events")
@@ -648,22 +662,26 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="WalletShift Radar — on-chain daily pipeline")
     parser.add_argument("--db",         default="walletshift.db")
     parser.add_argument("--out",        default="dashboard.html")
-    parser.add_argument("--alchemy",    default=os.environ.get("ALCHEMY_KEY", ""))
+    parser.add_argument("--alchemy",    default=os.environ.get("ALCHEMY_KEY", ""),
+                        help="Alchemy API key (builds https://eth-mainnet.g.alchemy.com/v2/KEY)")
+    parser.add_argument("--eth-rpc",
+                        default=os.environ.get("ETH_MAINNET_RPC_URL", ""),
+                        help="Ethereum mainnet JSON-RPC URL (Chainstack, Infura, etc.). "
+                             "Overrides --alchemy. Set ETH_MAINNET_RPC_URL env var instead.")
     parser.add_argument("--date",       default=None)
     parser.add_argument("--full-probe", action="store_true",
                         help="Re-probe ALL active agents' endpoints (use weekly)")
     parser.add_argument("--seed-from-walletshift", action="store_true",
                         help="One-time historical seed from walletshift API")
     parser.add_argument("--no-chain-scan", action="store_true",
-                        help="Skip on-chain block scan (walletshift seed only; no Alchemy key needed)")
+                        help="Skip on-chain block scan (no RPC key needed)")
     parser.add_argument("--reputation", action="store_true",
                         help="Index NewFeedback events from ReputationRegistry on mainnet + Base "
                              "and recompute Sybil collision tables")
     args = parser.parse_args()
 
-    if not args.alchemy and not args.no_chain_scan and not args.reputation:
-        raise SystemExit("ERROR: --alchemy KEY or ALCHEMY_KEY env var required "
-                         "(or use --no-chain-scan to skip on-chain data)")
+    # No validation needed: _resolve_eth_rpc() always returns a URL
+    # (mevblocker default when neither --alchemy nor --eth-rpc is given).
 
     if args.reputation:
         _run_reputation_scan(args.db, args.alchemy)
@@ -672,7 +690,7 @@ def main() -> None:
     run_date = args.date or date.today().isoformat()
     run(args.db, args.out, args.alchemy, run_date,
         args.full_probe, args.seed_from_walletshift,
-        no_chain_scan=args.no_chain_scan)
+        no_chain_scan=args.no_chain_scan, eth_rpc=args.eth_rpc)
 
 
 if __name__ == "__main__":
