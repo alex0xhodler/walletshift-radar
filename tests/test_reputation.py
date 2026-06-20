@@ -5,16 +5,74 @@ All tests use in-memory SQLite so no filesystem side-effects.
 Decode tests use synthetic hex payloads constructed from the NewFeedback ABI.
 Aggregation tests insert known rows and verify SQL logic directly.
 """
+import json
 import sqlite3
+import urllib.error
+import urllib.request
+from io import BytesIO
+from unittest.mock import MagicMock, call, patch
+
 import pytest
 
 from walletshift_radar.db import init_db, migrate_reputation_schema
 from walletshift_radar.reputation import (
+    _rpc,
     decode_feedback_event,
     upsert_reputation_event,
     recompute_agent_reputation,
     recompute_sybil_collisions,
 )
+
+
+# ── helpers ───────────────────────────────────────────────────────────────────
+
+def _ok_response(result="0x1"):
+    """Build a mock urlopen response that returns a valid JSON-RPC result."""
+    body = json.dumps({"jsonrpc": "2.0", "id": 1, "result": result}).encode()
+    mock_resp = MagicMock()
+    mock_resp.__enter__ = lambda s: s
+    mock_resp.__exit__ = MagicMock(return_value=False)
+    mock_resp.read.return_value = body
+    return mock_resp
+
+
+def _http_error(code):
+    err = urllib.error.HTTPError(
+        url="http://fake", code=code, msg="err", hdrs={}, fp=BytesIO(b"")
+    )
+    return err
+
+
+# ── _rpc tests ────────────────────────────────────────────────────────────────
+
+class TestRpcHelper:
+    def test_sends_walletshift_user_agent(self):
+        """_rpc must set User-Agent to walletshift-radar/1.0."""
+        with patch("walletshift_radar.reputation.urllib.request.urlopen",
+                   return_value=_ok_response()) as mock_open:
+            _rpc("http://fake", "eth_blockNumber", [])
+        req = mock_open.call_args[0][0]
+        assert req.get_header("User-agent") == "walletshift-radar/1.0"
+
+    def test_retries_on_429_and_succeeds(self):
+        """429 on first attempt must be retried; success on second attempt must be returned."""
+        ok = _ok_response("0x42")
+        side_effects = [_http_error(429), ok]
+        with patch("walletshift_radar.reputation.urllib.request.urlopen",
+                   side_effect=side_effects):
+            with patch("walletshift_radar.reputation.time.sleep"):
+                result = _rpc("http://fake", "eth_blockNumber", [], retries=3)
+        assert result.get("result") == "0x42"
+
+    def test_raises_http_error_after_max_retries(self):
+        """Non-retried HTTP errors (403, 404, etc.) must propagate after retries exhausted."""
+        side_effects = [_http_error(403)] * 3
+        with patch("walletshift_radar.reputation.urllib.request.urlopen",
+                   side_effect=side_effects):
+            with patch("walletshift_radar.reputation.time.sleep"):
+                with pytest.raises(urllib.error.HTTPError) as exc_info:
+                    _rpc("http://fake", "eth_blockNumber", [], retries=3)
+        assert exc_info.value.code == 403
 
 # ── fixtures ──────────────────────────────────────────────────────────────────
 

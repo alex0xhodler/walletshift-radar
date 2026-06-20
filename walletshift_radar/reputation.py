@@ -69,13 +69,22 @@ def _rpc(url: str, method: str, params: list, retries: int = 3) -> dict:
         url, data=body.encode(),
         headers={
             "Content-Type": "application/json",
-            "User-Agent":   "python-httpx/0.27.0",
+            "User-Agent":   "walletshift-radar/1.0",
         },
     )
     for attempt in range(retries):
         try:
             with urllib.request.urlopen(req, timeout=30) as resp:
                 return json.loads(resp.read())
+        except urllib.error.HTTPError as exc:
+            if exc.code == 429:
+                if attempt == retries - 1:
+                    raise
+                time.sleep(5 * (attempt + 1))
+            elif attempt == retries - 1:
+                raise
+            else:
+                time.sleep(2 ** attempt)
         except urllib.error.URLError:
             if attempt == retries - 1:
                 raise
