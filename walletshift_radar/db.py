@@ -34,7 +34,8 @@ CREATE TABLE IF NOT EXISTS agents (
     source          TEXT    DEFAULT 'onchain',
     token_uri       TEXT,
     description     TEXT,
-    unresolved      INTEGER DEFAULT 0
+    unresolved      INTEGER DEFAULT 0,
+    services_json   TEXT
 );
 
 CREATE TABLE IF NOT EXISTS snapshots (
@@ -145,16 +146,27 @@ def migrate_reputation_schema(conn: sqlite3.Connection) -> None:
     conn.commit()
 
 
+def migrate_services_cache(conn: sqlite3.Connection) -> None:
+    """Add services_json column to existing walletshift.db (idempotent)."""
+    existing = {row[1] for row in conn.execute("PRAGMA table_info(agents)")}
+    if "services_json" not in existing:
+        conn.execute("ALTER TABLE agents ADD COLUMN services_json TEXT")
+        conn.commit()
+
+
 # ── upsert helpers ────────────────────────────────────────────────────────────
 
 def upsert_agent(conn: sqlite3.Connection, agent: dict,
                  cluster_key: str, snapshot_date: str,
-                 source: str = "walletshift") -> None:
+                 source: str = "walletshift",
+                 services_json: str | None = None) -> None:
     """
     Insert or update an agent row.
 
     Accepts both walletshift API dicts (key 'id') and on-chain enriched dicts
     (key 'token_id').  On-chain agents carry token_uri, description, unresolved.
+    services_json: JSON-serialised list of service dicts (endpoint URLs, no health).
+                   Pass None to leave an existing cached value intact.
     """
     tid = agent.get("id") or agent.get("token_id")
     if tid is None:
@@ -169,8 +181,8 @@ def upsert_agent(conn: sqlite3.Connection, agent: dict,
         INSERT INTO agents
             (token_id, name, ens, category, label, owner, kind,
              registry, network, reg_date, cluster_key, first_seen, last_seen,
-             is_active, source, token_uri, description, unresolved)
-        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,?,?)
+             is_active, source, token_uri, description, unresolved, services_json)
+        VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,1,?,?,?,?,?)
         ON CONFLICT(token_id) DO UPDATE SET
             name=excluded.name,
             ens=excluded.ens,
@@ -187,7 +199,8 @@ def upsert_agent(conn: sqlite3.Connection, agent: dict,
             source=excluded.source,
             token_uri=COALESCE(excluded.token_uri, token_uri),
             description=COALESCE(excluded.description, description),
-            unresolved=excluded.unresolved
+            unresolved=excluded.unresolved,
+            services_json=COALESCE(excluded.services_json, services_json)
     """, (
         tid,
         agent.get("name") or f"Agent #{tid}",
@@ -206,6 +219,7 @@ def upsert_agent(conn: sqlite3.Connection, agent: dict,
         agent.get("token_uri"),
         agent.get("description") or agent.get("descr"),
         1 if agent.get("_unresolved") else 0,
+        services_json,
     ))
     conn.commit()
 
