@@ -42,9 +42,9 @@ from .scan     import (get_latest_block, get_new_mints, enrich_token,
 from .cluster  import cluster_key, group_by_cluster
 from .analyze  import compute_health_counts, compute_deltas, momentum_score
 from .db       import (
-    init_db, upsert_agent, upsert_snapshot, upsert_directory_stats,
-    upsert_category_stats, upsert_cluster_stats, insert_event,
-    get_snapshot_dict, get_prev_snapshot_date, get_history,
+    init_db, migrate_services_cache, upsert_agent, upsert_snapshot,
+    upsert_directory_stats, upsert_category_stats, upsert_cluster_stats,
+    insert_event, get_snapshot_dict, get_prev_snapshot_date, get_history,
     get_scan_state, set_scan_state, get_unresolved_token_ids,
 )
 from .render   import render_dashboard
@@ -94,6 +94,29 @@ def _metrics_from_ws_result(result: dict) -> dict:
     }
 
 
+# ── helpers ───────────────────────────────────────────────────────────────────
+
+def _ws_endpoints_to_services(endpoints: list) -> list:
+    """
+    Convert WalletShift API endpoint dicts to the probe-ready services format.
+
+    WalletShift: {"url": "...", "proto": "a2a", "name": "A2A", ...}
+    Services:    {"endpoint": "...", "name": "A2A"}
+    """
+    result = []
+    for ep in endpoints:
+        url = (ep.get("url") or "").strip()
+        if not url:
+            continue
+        result.append({"endpoint": url, "name": ep.get("name") or ep.get("proto") or ""})
+    return result
+
+
+def _services_without_health(services: list) -> list:
+    """Strip transient health results from a services list before caching."""
+    return [{k: v for k, v in s.items() if k != "health"} for s in services]
+
+
 # ── walletshift overlay (optional enrichment) ─────────────────────────────────
 
 def _seed_from_walletshift(conn: sqlite3.Connection, run_date: str,
@@ -127,8 +150,10 @@ def _seed_from_walletshift(conn: sqlite3.Connection, run_date: str,
             "reg_date":    None,   # walletshift search doesn't return reg date
             "description": r.get("summary"),
         }
+        svc_json = json.dumps(_ws_endpoints_to_services(r.get("endpoints") or []))
         upsert_agent(conn, agent, cluster_key=ckey,
-                     snapshot_date=run_date, source="walletshift")
+                     snapshot_date=run_date, source="walletshift",
+                     services_json=svc_json)
         metrics = _metrics_from_ws_result(r)
         upsert_snapshot(conn, run_date, tid, metrics)
 
@@ -218,6 +243,7 @@ def run(db_path: str, out_path: str, alchemy_key: str,
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     init_db(conn)
+    migrate_services_cache(conn)
 
     # ── Step 0 (one-time): seed from walletshift ─────────────────────────────
     if seed_from_walletshift:
@@ -269,8 +295,10 @@ def run(db_path: str, out_path: str, alchemy_key: str,
             continue
 
         ckey = cluster_key(enriched["name"])
+        svc_json = json.dumps(_services_without_health(enriched.get("services") or []))
         upsert_agent(conn, enriched, cluster_key=ckey,
-                     snapshot_date=run_date, source="onchain")
+                     snapshot_date=run_date, source="onchain",
+                     services_json=svc_json)
         metrics = _metrics_from_enriched(enriched)
         upsert_snapshot(conn, run_date, tid, metrics)
         newly_added.append(tid)
@@ -289,39 +317,84 @@ def run(db_path: str, out_path: str, alchemy_key: str,
         enriched = enrich_token(url, tid, probe=True)
         if enriched and not enriched.get("_unresolved"):
             ckey = cluster_key(enriched["name"])
+            svc_json = json.dumps(_services_without_health(enriched.get("services") or []))
             upsert_agent(conn, enriched, cluster_key=ckey,
-                         snapshot_date=run_date, source="onchain")
+                         snapshot_date=run_date, source="onchain",
+                         services_json=svc_json)
             upsert_snapshot(conn, run_date, tid, _metrics_from_enriched(enriched))
             newly_added.append(tid)
 
     # (walletshift overlay only happens via --seed-from-walletshift on first run)
 
     # ── Step 6: snapshot ALL active agents that don't yet have today's snapshot
-    #    (for the daily health re-probe — only if --full-probe or no ws overlay)
+    #    (for the daily health re-probe — only if --full-probe)
     existing_snap_tids = {
         row[0] for row in conn.execute(
             "SELECT token_id FROM snapshots WHERE snapshot_date=?", (run_date,)
         ).fetchall()
     }
     all_active = conn.execute(
-        "SELECT token_id, name, token_uri FROM agents WHERE is_active=1 AND unresolved=0"
+        "SELECT token_id, name, token_uri, services_json FROM agents "
+        "WHERE is_active=1 AND unresolved=0"
     ).fetchall()
 
     needs_probe = [row for row in all_active
                    if row["token_id"] not in existing_snap_tids]
 
     if needs_probe and full_probe:
-        print(f"  Full re-probe of {len(needs_probe)} agent(s) …")
+        fast_count = sum(1 for r in needs_probe if r["services_json"])
+        slow_count = len(needs_probe) - fast_count
+        print(f"  Full re-probe of {len(needs_probe)} agent(s) "
+              f"({fast_count} fast-path, {slow_count} slow-path) …")
+
         for i, row in enumerate(needs_probe):
             tid = row["token_id"]
-            enriched = enrich_token(url, tid, probe=True)
-            if enriched and not enriched.get("_unresolved"):
-                upsert_snapshot(conn, run_date, tid, _metrics_from_enriched(enriched))
-            elif not enriched:
-                # No longer a real service agent — mark inactive
-                conn.execute("UPDATE agents SET is_active=0, last_seen=? WHERE token_id=?",
-                             (run_date, tid))
-                conn.commit()
+
+            try:
+                if row["services_json"]:
+                    # Fast path: endpoint URLs are cached — skip IPFS entirely
+                    cached_services = json.loads(row["services_json"])
+                    probed = probe_agent_endpoints(cached_services)
+                    # skills_count is derived from IPFS metadata (a2aSkills/mcpTools),
+                    # not available without re-fetching. Carry forward from last snapshot.
+                    prev_snap = conn.execute(
+                        "SELECT skills_count, protos_json FROM snapshots "
+                        "WHERE token_id=? AND snapshot_date < ? "
+                        "ORDER BY snapshot_date DESC LIMIT 1",
+                        (tid, run_date),
+                    ).fetchone()
+                    skills_count = (prev_snap["skills_count"] or 0) if prev_snap else 0
+                    protos_json  = prev_snap["protos_json"] if prev_snap else json.dumps(_infer_protos(cached_services))
+                    metrics = {
+                        "skills_count":    skills_count,
+                        "live_count":      sum(1 for s in probed if (s.get("health") or {}).get("status") == "live"),
+                        "dead_count":      sum(1 for s in probed if (s.get("health") or {}).get("status") == "dead"),
+                        "paywalled_count": sum(1 for s in probed if (s.get("health") or {}).get("status") == "paywalled"),
+                        "endpoint_count":  len(probed),
+                        "x402":            any((s.get("name") or "").lower() == "x402" for s in cached_services),
+                        "protos_json":     protos_json,
+                        "summary_hash":    "",
+                    }
+                    upsert_snapshot(conn, run_date, tid, metrics)
+                else:
+                    # Slow path: fetch from chain + IPFS; always write latest services_json on success
+                    enriched = enrich_token(url, tid, probe=True)
+                    if enriched and not enriched.get("_unresolved"):
+                        svc_json = json.dumps(_services_without_health(enriched.get("services") or []))
+                        conn.execute(
+                            "UPDATE agents SET services_json=? WHERE token_id=?",
+                            (svc_json, tid),
+                        )
+                        conn.commit()
+                        upsert_snapshot(conn, run_date, tid, _metrics_from_enriched(enriched))
+                    elif not enriched:
+                        # No longer a real service agent — mark inactive
+                        conn.execute("UPDATE agents SET is_active=0, last_seen=? WHERE token_id=?",
+                                     (run_date, tid))
+                        conn.commit()
+            except Exception as exc:
+                print(f"    ⚠ probe failed for token {tid}: {exc}")
+
             time.sleep(0.12)
             if (i + 1) % 50 == 0:
                 print(f"    probed {i+1}/{len(needs_probe)} …")
